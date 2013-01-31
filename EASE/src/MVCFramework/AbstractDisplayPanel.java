@@ -14,6 +14,10 @@ public abstract class AbstractDisplayPanel extends JPanel {
     
     private boolean useGradient = true;
     private long paintTime;
+
+    public void setPaintTime(long paintTime) {
+        this.paintTime = paintTime;
+    }
     
     
     public void useGradient(boolean state){useGradient = state;}

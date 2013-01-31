@@ -1,4 +1,4 @@
-/** Distributed under the terms of the GPL, version 3. */
+ /** Distributed under the terms of the GPL, version 3. */
 package KineticModel;
 
 import java.awt.*;

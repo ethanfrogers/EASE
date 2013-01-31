@@ -1,6 +1,7 @@
 /** Distributed under the terms of the GPL, version 3. */
 package KineticModel;
 
+import MVCFramework.AbstractControlPanel;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.Observable;
@@ -13,7 +14,7 @@ import javax.swing.event.*;
  * 
  * @author John B. Matthews
  */
-class ControlPanel extends JPanel
+class ControlPanel extends AbstractControlPanel
     implements ActionListener, ChangeListener, Observer {
 
     private static final int RATE = 25; // 25 Hz

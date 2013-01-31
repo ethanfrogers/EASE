@@ -61,7 +61,7 @@ class DisplayPanel extends AbstractDisplayPanel implements Observer {
 
     	// Initialize image and model first time.
         if (image == null) initImage();
-        if (model.getAtoms().isEmpty()) model.initAtoms();
+        if (model.getAtoms().isEmpty()) model.init();
         // Get current time.
         
 

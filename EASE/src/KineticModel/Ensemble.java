@@ -1,6 +1,7 @@
 /** Distributed under the terms of the GPL, version 3. */
 package KineticModel;
 
+import MVCFramework.AbstractEnsemble;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Shape;
@@ -16,7 +17,7 @@ import java.util.Random;
  * 
  * @author John B. Matthews
  */
-class Ensemble extends Observable implements Observer {
+class Ensemble extends AbstractEnsemble implements Observer {
 
     private static final Random random = new Random();
     private static final Color[] colors = GradientImage.createColorArray();
@@ -24,10 +25,6 @@ class Ensemble extends Observable implements Observer {
     private static final int MIN_RADIUS = 20;
     private static final Image[] images = GradientImage.createImageArray(MIN_RADIUS);
     private static final int VSCALE = 5;
-    private int left = 0;
-    private int top = 0;
-    private int right = 500;
-    private int bottom = 500;
     private int iterations = 0;
     private int collisions = 0;
     private ArrayList<Particle> atoms;
@@ -47,13 +44,6 @@ class Ensemble extends Observable implements Observer {
     }
 
     /** Set the container boundaries. */
-    public void setWalls(int l, int t, int r, int b) {
-        left = l;
-        top = t;
-        right = r;
-        bottom = b;
-        resetCollisionRate();
-    }
 
     /** Advance each atom. */
     public void iterate() {
@@ -76,12 +66,18 @@ class Ensemble extends Observable implements Observer {
     }
 
     /** Get an atom's shape. */
-    public Shape getShape(Particle atom) {
-        double radius = atom.getR();
-        double diameter = 2 * radius;
-        p1 = atom.getPosition(p1);
-        ellipse.setFrame(p1.x - radius, p1.y - radius , diameter, diameter);
-        return ellipse;
+    public Shape getShape(Object atom) {
+        Shape shape1=null;
+        if(atom instanceof Particle){
+            Particle atom1 = (Particle)atom;
+            double radius = atom1.getR();
+            double diameter = 2 * radius;
+            p1 = atom1.getPosition(p1);
+            ellipse.setFrame(p1.x - radius, p1.y - radius , diameter, diameter);
+            shape1 = ellipse;
+        }
+        return shape1;
+        
     }
 
     // Check for collision between atom1 & atom2
@@ -154,7 +150,7 @@ class Ensemble extends Observable implements Observer {
     }
     
     /** Add atoms to half of max. */
-    public void initAtoms() {
+    public void init() {
         atoms.clear();
         
         for (int i = 0; i < 3; i++) {
@@ -235,7 +231,7 @@ class Ensemble extends Observable implements Observer {
     public void update(Observable o, Object o1) {
         //throw new UnsupportedOperationException("Not supported yet.");
         if("reset".equals(o1)){
-            initAtoms();
+            init();
         }
         else if("plus".equals(o1)){
             addAtoms();
