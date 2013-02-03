@@ -22,6 +22,9 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
     GameDisplayPanel view;
     GameEnsemble model;
     JButton btn_Iterate = new JButton();
+    JButton btn_Left = new JButton();
+    JButton btn_Right = new JButton();
+    
     
     public GameControlPanel(GameDisplayPanel view, GameEnsemble model){
         model.addObserver(view);
@@ -29,12 +32,26 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
         this.view = view;
         
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         
         btn_Iterate.setText("Iterate");
         btn_Iterate.setActionCommand("next");
         btn_Iterate.addActionListener(this);
+        
+        
+        btn_Left.setText("<-");
+        btn_Left.setActionCommand("left");
+        btn_Left.addActionListener(this);
+        
+        btn_Right.setText("->");
+        btn_Right.setActionCommand("right");
+        btn_Right.addActionListener(this);
+        
+        panel.add(btn_Left);
         panel.add(btn_Iterate);
+        panel.add(btn_Right);
+        
+        
         
         this.add(panel);
         
@@ -47,12 +64,14 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        System.out.println("Iterate button pressed.");
         Object source = ae.getSource();
         String cmd = ae.getActionCommand();
         
         if("next".equals(cmd)){
             model.iterate();
+        }
+        else if("left".equals(cmd) || "right".equals(cmd)){
+            model.moveFriendly(cmd);
         }
     }
 

@@ -44,7 +44,7 @@ public class GameEnsemble extends AbstractEnsemble {
             if(o1 instanceof Enemy){
                 e = (Enemy)o1;
                 enemyPosition = e.getPosition();
-                enemyPosition.set(enemyPosition.x+50, enemyPosition.y);
+                enemyPosition.set(enemyPosition.x+100, enemyPosition.y);
                 e.setPosition(enemyPosition);
             }
             else if(o1 instanceof Friendly){
@@ -52,6 +52,25 @@ public class GameEnsemble extends AbstractEnsemble {
                 friendlyPosition = f.getPosition();
                 friendlyPosition.set(friendlyPosition.x-100, friendlyPosition.y);
                 f.setPosition(friendlyPosition);
+            }
+        }
+        setChanged();
+        notifyObservers(state);
+    }
+    
+    public void moveFriendly(Object o1){
+        for(Object o : this.model){
+            Friendly f;
+            if (o instanceof Friendly){
+                f = (Friendly) o;
+                if("left".equals(o1)){
+                    friendlyPosition.set(friendlyPosition.x - 50, friendlyPosition.y);
+                    f.setPosition(friendlyPosition);
+                }
+                else if("right".equals(o1)){
+                    friendlyPosition.set(friendlyPosition.x + 50, friendlyPosition.y);
+                    f.setPosition(friendlyPosition);
+                }
             }
         }
         setChanged();
