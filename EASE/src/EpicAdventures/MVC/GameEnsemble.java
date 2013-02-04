@@ -115,6 +115,9 @@ public class GameEnsemble extends AbstractEnsemble {
         if(objectsOnModel == 0){
             Enemy e = new Enemy();
             e.setPosition(enemyPosition);
+            e.setHealth(86);
+            setChanged();
+            notifyObservers(e.getHealth());
             model.add(e);
             objectsOnModel++;
         }

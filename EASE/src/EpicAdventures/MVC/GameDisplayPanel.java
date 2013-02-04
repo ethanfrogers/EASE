@@ -62,7 +62,6 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
                 s=model.getShape(e);
-                System.out.println("Enemy position:" + e.getX() + " " + e.getY());
                 //System.out.println("Enemy Shape " + s.toString());
             }
             else if(o instanceof Friendly){
