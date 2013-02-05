@@ -4,8 +4,9 @@
  */
 package EpicAdventures.Elements;
 
-import MVCFramework.Vector;
-import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -14,7 +15,14 @@ import java.awt.Color;
 public class Enemy extends AbstractGameObject{
     
     public Enemy(){
-        
+       try{
+            this.setImg(ImageIO.read(new File("alien")));
+       }
+       catch(IOException ioe){
+           System.out.println("Cannot find image");
+       }
     }
+    
+    
     
 }

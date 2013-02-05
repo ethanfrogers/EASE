@@ -58,9 +58,12 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
         
         for(Object o : model.getModel()){
             Shape s = null;//model.getShape(o);
+            Image i = null;
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
                 s=model.getShape(e);
+                i = e.getImg();
+                g2D.drawImage(i, 700/2, 600/2, this);
                 
             }
             else if(o instanceof Friendly){

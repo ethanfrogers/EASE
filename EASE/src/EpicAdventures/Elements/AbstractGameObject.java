@@ -80,7 +80,16 @@ public class AbstractGameObject extends Object {
         position.x = x;
         position.y = y;
     }
+
+    public Image getImg() {
+        return img;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
+    }
    
+    
     
     
 }
