@@ -22,7 +22,7 @@ public class GameEnsemble extends AbstractEnsemble {
     private int objectLimit = 2;
     private int objectsOnModel = 0;
     private Vector enemyPosition = new Vector(top, left);
-    private Vector friendlyPosition = new Vector(bottom,right);
+    private Vector friendlyPosition = new Vector(bottom+35,right+35);
     //private Rectangle2D enemyShape = new Rectangle2D.Double(enemyPosition.x,enemyPosition.y, 100, 100);
     //private Rectangle2D friendlyShape = new Rectangle2D.Double(friendlyPosition.x,friendlyPosition.y,50,50);
     private Rectangle2D enemyShape = new Rectangle2D.Double();

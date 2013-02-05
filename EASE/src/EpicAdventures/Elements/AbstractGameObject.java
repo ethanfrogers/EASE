@@ -7,6 +7,7 @@ package EpicAdventures.Elements;
 import MVCFramework.Vector;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -19,7 +20,7 @@ public class AbstractGameObject extends Object {
     protected int health = 0;
     protected Color color = new Color(0,true);
     protected Vector position = new Vector();
-    protected Image img = null;
+    protected BufferedImage img = null;
 
     public double getHeight() {
         return height;
@@ -81,11 +82,11 @@ public class AbstractGameObject extends Object {
         position.y = y;
     }
 
-    public Image getImg() {
+    public BufferedImage getImg() {
         return img;
     }
 
-    public void setImg(Image img) {
+    public void setImg(BufferedImage img) {
         this.img = img;
     }
    

@@ -4,6 +4,7 @@
  */
 package EpicAdventures.Elements;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -15,11 +16,14 @@ import javax.imageio.ImageIO;
 public class Enemy extends AbstractGameObject{
     
     public Enemy(){
+       File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/alien.png");
+       
+       System.out.println(f.getPath());
        try{
-            this.setImg(ImageIO.read(new File("alien")));
+            this.setImg(ImageIO.read(f));
        }
-       catch(IOException ioe){
-           System.out.println("Cannot find image");
+       catch(IOException ex){
+           ex.printStackTrace();
        }
     }
     

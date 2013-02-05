@@ -6,6 +6,9 @@ package EpicAdventures.Elements;
 
 import java.awt.Color;
 import MVCFramework.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -14,5 +17,14 @@ import MVCFramework.*;
 public class Friendly extends AbstractGameObject {
     
     public Friendly(){
+        File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/tank.png");
+       
+       System.out.println(f.getPath());
+       try{
+            this.setImg(ImageIO.read(f));
+       }
+       catch(IOException ex){
+           ex.printStackTrace();
+       }
     }
 }

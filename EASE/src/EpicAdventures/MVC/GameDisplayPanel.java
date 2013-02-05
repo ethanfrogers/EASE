@@ -11,8 +11,11 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import javax.imageio.ImageIO;
 
 
 /**
@@ -49,10 +52,18 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
         
         long start = System.currentTimeMillis();
         
-        g.setColor(Color.LIGHT_GRAY);
+        //g.setColor(Color.LIGHT_GRAY);
+        Image b = null;
+        try{
+             b =  ImageIO.read(new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/MVC/8bitbg.png"));
+        }
+        catch(IOException e){
+            System.err.println("Cannot read input file");
+        }
         int w = getWidth();
         int h = getHeight();
-        g.fillRect(0, 0, w, h);
+        g.drawImage(b, 0, 0, this);
+        //g.fillRect(0, 0, w, h);
         
         Graphics2D g2D = (Graphics2D)g;
         
@@ -61,17 +72,16 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             Image i = null;
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
-                s=model.getShape(e);
                 i = e.getImg();
-                g2D.drawImage(i, 700/2, 600/2, this);
+                g2D.drawImage(i, (int)e.getX(), (int)e.getY(), this);
                 
             }
             else if(o instanceof Friendly){
                 Friendly f = (Friendly)o;
-                s=model.getShape(f);
+                i = f.getImg();
+                g2D.drawImage(i, (int)f.getX(), (int)f.getY(), this);
             }
-            g2D.setPaint(model.getElementColor(o));
-            g2D.fill(s);
+            
             
         }
         
