@@ -4,6 +4,7 @@
  */
 package EpicAdventures.MVC;
 
+import EpicAdventures.Elements.HealthPacket;
 import MVCFramework.AbstractControlPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,49 +24,42 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
     
     GameDisplayPanel view;
     GameEnsemble model;
-    JButton btn_Iterate = new JButton();
-    JButton btn_Left = new JButton();
-    JButton btn_Right = new JButton();
+    
+    
     JLabel lbl_Health = new JLabel();
-    JProgressBar prog_HealthBar = new JProgressBar(JProgressBar.HORIZONTAL,0,100);
-    int healthStatus = 0;
+    JLabel lbl_friendHealth = new JLabel();
+    
+    JProgressBar prog_EnemyHealthBar = new JProgressBar(JProgressBar.HORIZONTAL,0,100);
+    JProgressBar prog_FriendlyHealthBar = new JProgressBar(JProgressBar.HORIZONTAL,0,100);
+    
+    int enemyHealthStatus = 0;
+    int friendlyHealthStatus = 0;
     
     public GameControlPanel(GameDisplayPanel view, GameEnsemble model){
         model.addObserver(view);
         model.addObserver(this);
         this.model = model;
         this.view = view;
-        
+        addKeyListener(this);
+        this.setFocusable(true);
         
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.addKeyListener(this);
-        
-        btn_Iterate.setText("Iterate");
-        btn_Iterate.setActionCommand("next");
-        btn_Iterate.addActionListener(this);
         
         
-        btn_Left.setText("<-");
-        btn_Left.setActionCommand("left");
-        btn_Left.addActionListener(this);
+        lbl_Health.setText("Nexus HP: ");
+        lbl_friendHealth.setText("HP:");
         
-        btn_Right.setText("->");
-        btn_Right.setActionCommand("right");
-        btn_Right.addActionListener(this);
+        prog_EnemyHealthBar.setValue(enemyHealthStatus);
+        prog_EnemyHealthBar.setStringPainted(true);
         
-        lbl_Health.setText("Nexus Health: ");
+        prog_FriendlyHealthBar.setValue(friendlyHealthStatus);
+        prog_FriendlyHealthBar.setStringPainted(true);
         
-        prog_HealthBar.setValue(healthStatus);
-        prog_HealthBar.setStringPainted(true);
-        
-        panel.add(btn_Left);
-        panel.add(btn_Iterate);
-        panel.add(btn_Right);
+        panel.add(lbl_friendHealth);
+        panel.add(prog_FriendlyHealthBar);            
         panel.add(lbl_Health);
-        panel.add(prog_HealthBar);
-        
-        
+        panel.add(prog_EnemyHealthBar);
         
         this.add(panel);
         
@@ -73,7 +67,7 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
     }
     
     public JButton getDefaultButton() {
-        return btn_Iterate;
+        return new JButton();
     }
 
     @Override
@@ -84,7 +78,7 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
         if("next".equals(cmd)){
             model.iterate();
         }
-        else if("left".equals(cmd) || "right".equals(cmd)){
+        else if("left".equals(cmd) || "right".equals(cmd) || "up".equals(cmd) || "down".equals(cmd) ){
             model.moveFriendly(cmd);
         }
     }
@@ -92,13 +86,27 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
     @Override
     public void keyTyped(KeyEvent ke) {
         //throw new UnsupportedOperationException("Not supported yet.");
-        System.out.println("I TYPED A KEY!");
     }
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        //throw new UnsupportedOperationException("Not supported yet.");
-        System.out.println("I PRESSED A KEY!");
+        int keyCode = ke.getKeyCode();
+        String cmd = "";
+        
+        if(keyCode == KeyEvent.VK_UP){
+            cmd = "up";
+        }
+        else if(keyCode == KeyEvent.VK_DOWN){
+            cmd = "down";
+        }
+        else if(keyCode == KeyEvent.VK_LEFT){
+            cmd = "left";
+        }
+        else if(keyCode == KeyEvent.VK_RIGHT){
+            cmd = "right";
+        }
+        
+        actionPerformed(new ActionEvent(this,0,cmd));
         
     }
 
@@ -116,12 +124,18 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
     @Override
     public void update(Observable o, Object o1) {
         if("changed".equals(o1)){
-            healthStatus -= 5;
-            prog_HealthBar.setValue(healthStatus);
+            prog_EnemyHealthBar.setValue(enemyHealthStatus);
         }
-        else if (o1 instanceof Integer){
-            healthStatus = (Integer)o1;
-            prog_HealthBar.setValue(healthStatus);
+        else if (o1 instanceof HealthPacket){
+            HealthPacket h = (HealthPacket)o1;
+            if("enemy".equals(h.getId())){
+                enemyHealthStatus = h.getHealth();
+                prog_EnemyHealthBar.setValue(enemyHealthStatus);
+            }
+            else if("friendly".equals(h.getId())){
+                friendlyHealthStatus = h.getHealth();
+                prog_FriendlyHealthBar.setValue(friendlyHealthStatus);
+            }
         }
     }
 

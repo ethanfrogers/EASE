@@ -14,7 +14,7 @@ import javax.swing.event.*;
  * 
  * @author John B. Matthews
  */
-class ControlPanel extends AbstractControlPanel
+public class ControlPanel extends AbstractControlPanel
     implements ActionListener, ChangeListener, Observer {
 
     private static final int RATE = 25; // 25 Hz

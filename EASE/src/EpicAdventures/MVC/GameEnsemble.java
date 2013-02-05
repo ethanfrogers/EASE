@@ -5,6 +5,7 @@
 package EpicAdventures.MVC;
 import EpicAdventures.Elements.Enemy;
 import EpicAdventures.Elements.Friendly;
+import EpicAdventures.Elements.HealthPacket;
 import MVCFramework.AbstractEnsemble;
 import MVCFramework.Vector;
 import java.awt.Color;
@@ -71,6 +72,14 @@ public class GameEnsemble extends AbstractEnsemble {
                     friendlyPosition.set(friendlyPosition.x + 50, friendlyPosition.y);
                     f.setPosition(friendlyPosition);
                 }
+                else if("up".equals(o1)){
+                    friendlyPosition.set(friendlyPosition.x, friendlyPosition.y-50);
+                    f.setPosition(friendlyPosition);
+                }
+                else if("down".equals(o1)){
+                    friendlyPosition.set(friendlyPosition.x, friendlyPosition.y+50);
+                    f.setPosition(friendlyPosition);
+                }
             }
         }
         setChanged();
@@ -111,19 +120,24 @@ public class GameEnsemble extends AbstractEnsemble {
     }
 
     public void addElements() {
+        
+        
         if(model.size() == objectLimit) return;
         if(objectsOnModel == 0){
             Enemy e = new Enemy();
             e.setPosition(enemyPosition);
             e.setHealth(86);
             setChanged();
-            notifyObservers(e.getHealth());
+            notifyObservers(new HealthPacket(e.getHealth(),"enemy"));
             model.add(e);
             objectsOnModel++;
         }
         else if(objectsOnModel == 1){
             Friendly f = new Friendly();
             f.setPosition(friendlyPosition);
+            f.setHealth(100);
+            setChanged();
+            notifyObservers(new HealthPacket(f.getHealth(),"friendly"));
             model.add(f);
             objectsOnModel++;
         }

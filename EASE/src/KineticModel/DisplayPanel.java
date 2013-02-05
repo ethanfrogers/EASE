@@ -25,7 +25,7 @@ import java.util.Random;
  * 
  * @author John B. Matthews
  */
-class DisplayPanel extends AbstractDisplayPanel implements Observer {
+public class DisplayPanel extends AbstractDisplayPanel implements Observer {
 
     private static final int ROWS = 20;
     private static final int COLS = ROWS;

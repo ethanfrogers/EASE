@@ -4,6 +4,7 @@
  */
 package MVCFramework;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
  */
 public abstract class AbstractControlPanel extends JPanel{
     
+    public abstract JButton getDefaultButton();
 
     
     

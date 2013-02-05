@@ -44,7 +44,6 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
     }
     
     protected void paintComponent(Graphics g){
-        System.out.println("REPAINITING");
         if(image == null) initImage();
         if(model.getModel().isEmpty())model.init();
         
@@ -62,7 +61,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
                 s=model.getShape(e);
-                //System.out.println("Enemy Shape " + s.toString());
+                
             }
             else if(o instanceof Friendly){
                 Friendly f = (Friendly)o;
@@ -70,7 +69,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             }
             g2D.setPaint(model.getElementColor(o));
             g2D.fill(s);
-            //System.out.println("Friendly Shape " + s.toString());
+            
         }
         
         this.setPaintTime(System.currentTimeMillis()-start); 
@@ -84,7 +83,6 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
     @Override
     public void update(Observable o, Object o1) {
         if("changed".equals(o1)){
-            System.out.println("repaint called");
             this.repaint();
             
         }

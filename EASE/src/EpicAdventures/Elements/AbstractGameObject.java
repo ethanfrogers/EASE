@@ -6,6 +6,7 @@ package EpicAdventures.Elements;
 
 import MVCFramework.Vector;
 import java.awt.Color;
+import java.awt.Image;
 
 /**
  *
@@ -18,6 +19,7 @@ public class AbstractGameObject extends Object {
     protected int health = 0;
     protected Color color = new Color(0,true);
     protected Vector position = new Vector();
+    protected Image img = null;
 
     public double getHeight() {
         return height;
@@ -78,7 +80,7 @@ public class AbstractGameObject extends Object {
         position.x = x;
         position.y = y;
     }
-    
+   
     
     
 }
