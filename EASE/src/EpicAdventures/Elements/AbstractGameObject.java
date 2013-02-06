@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  *
  * @author efrogers_it
  */
-public class AbstractGameObject extends Object {
+public abstract class AbstractGameObject extends Object {
     
     protected double height = 0;
     protected double width = 0;

@@ -4,6 +4,7 @@
  */
 package EpicAdventures.MVC;
 
+import EpicAdventures.Elements.Bullet;
 import EpicAdventures.Elements.Enemy;
 import EpicAdventures.Elements.Friendly;
 import MVCFramework.AbstractDisplayPanel;
@@ -46,6 +47,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
         });
     }
     
+    @Override
     protected void paintComponent(Graphics g){
         if(image == null) initImage();
         if(model.getModel().isEmpty())model.init();
@@ -72,14 +74,23 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             Image i = null;
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
-                i = e.getImg();
-                g2D.drawImage(i, (int)e.getX(), (int)e.getY(), this);
+                if(!(e.getHealth() <= 0)){
+                    i = e.getImg();
+                    g2D.drawImage(i, (int)e.getX(), (int)e.getY(), this);
+                }
+                else
+                    g2D.drawString("Player 1 wins.", 700/2, 600/2);
                 
             }
             else if(o instanceof Friendly){
                 Friendly f = (Friendly)o;
                 i = f.getImg();
                 g2D.drawImage(i, (int)f.getX(), (int)f.getY(), this);
+            }
+            else if(o instanceof Bullet){
+                Bullet bul = (Bullet)o;
+                i = bul.getImg();
+                g2D.drawImage(i, (int)bul.getX(), (int)bul.getY(), this);
             }
             
             

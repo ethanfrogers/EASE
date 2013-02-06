@@ -78,8 +78,11 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
         if("next".equals(cmd)){
             model.iterate();
         }
-        else if("left".equals(cmd) || "right".equals(cmd) || "up".equals(cmd) || "down".equals(cmd) ){
+        else if("left".equals(cmd) || "right".equals(cmd)){
             model.moveFriendly(cmd);
+        }
+        else if("space".equals(cmd)){
+            model.bulletFired();
         }
     }
     
@@ -93,17 +96,15 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
         int keyCode = ke.getKeyCode();
         String cmd = "";
         
-        if(keyCode == KeyEvent.VK_UP){
-            cmd = "up";
-        }
-        else if(keyCode == KeyEvent.VK_DOWN){
-            cmd = "down";
-        }
-        else if(keyCode == KeyEvent.VK_LEFT){
+        
+        if(keyCode == KeyEvent.VK_LEFT){
             cmd = "left";
         }
         else if(keyCode == KeyEvent.VK_RIGHT){
             cmd = "right";
+        }
+        else if(keyCode == KeyEvent.VK_SPACE){
+            cmd = "space";
         }
         
         actionPerformed(new ActionEvent(this,0,cmd));

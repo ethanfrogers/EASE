@@ -19,7 +19,7 @@ public class Friendly extends AbstractGameObject {
     public Friendly(){
         File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/tank.png");
        
-       System.out.println(f.getPath());
+       //System.out.println(f.getPath());
        try{
             this.setImg(ImageIO.read(f));
        }
