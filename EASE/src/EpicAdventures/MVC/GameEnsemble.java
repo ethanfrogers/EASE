@@ -278,29 +278,6 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         return model;
     }
 
-    private int updateFriendlyHealth(int healthChange) {
-        int curHealth = 0;
-        for(Object o: this.model){
-            if(o instanceof Friendly){
-                Friendly f = (Friendly)o;
-                f.setHealth(f.getHealth() - healthChange);
-                curHealth = f.getHealth();
-            }
-        }
-        return curHealth;
-    }
-
-    private int updateEnemyHealth(int healthChange) {
-        int curHealth = 0;
-        for(Object o: this.model){
-            if(o instanceof Enemy){
-                Enemy f = (Enemy)o;
-                f.setHealth(f.getHealth() - healthChange);
-                curHealth = f.getHealth();
-            }
-        }
-        return curHealth;
-    }
     private int updateHealth(int healthChange,AbstractGameObject o){
         int curHealth = 0;
         for(Object o1 : this.model){
