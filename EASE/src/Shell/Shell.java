@@ -8,41 +8,62 @@ import KineticModel.*;
 import EpicAdventures.MVC.GameControlPanel;
 import EpicAdventures.MVC.GameDisplayPanel;
 import EpicAdventures.MVC.GameEnsemble;
-import MVCFramework.AbstractControlPanel;
-import MVCFramework.AbstractDisplayPanel;
-import MVCFramework.AbstractEnsemble;
+import Factories.ShellFactory;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+
 
 /**
  *
  * @author efrogers_it
  */
-public class Shell {
-    public static void main(String [] args){
-        Scanner input = new Scanner(System.in);
+public class Shell implements ActionListener {
+    
+    public Shell(){
         
-        System.out.append("What game would you like to play?\n"
-                + "1)   KineticModel\n"
-                + "2)   Epic Adventures In Software Engineering");
-        final int choice = input.nextInt();
-        
+    }
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Object source = ae.getSource();
+        String cmd = ae.getActionCommand();
+        JFrame f = new JFrame();
+        int id = 0;
+        if(cmd.equals("game1")){
+            id = 1;
+        }
+        else if(cmd.equals("game2")){
+            id = 2;
+        }
+        final int id2 = id;
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                GameFactory.createGame(choice);
+               GameFactory.createGame(id2);
+            }
+        });
+        
+    }
+    
+    public static void main(String [] args){
+       
+        final Shell shell = new Shell();
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                ShellFactory.createShell(shell);
             }
         });
         
         
         
     }
+
     
 }
-
-
 class GameFactory{
     
     
