@@ -32,6 +32,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
     private BufferedImage image;
     private int[] iArray = {0,0,0,255};
     
+    
     public GameDisplayPanel(final GameEnsemble model){
         this.model = model;
         this.setPreferredSize(new Dimension(700,600));
@@ -73,14 +74,19 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
         for(Object o : model.getModel()){
             Shape s = null;//model.getShape(o);
             Image i = null;
+            if(!model.getEnemyState()){
+                    g2D.drawString("Player 1 wins.", 700/2, 600/2);
+                }
+            
             if(o instanceof Enemy){
                 Enemy e = (Enemy) o;
                 if(!(e.getHealth() <= 0)){
                     i = e.getImg();
                     g2D.drawImage(i, (int)e.getX(), (int)e.getY(), this);
                 }
-                else 
+                else
                     g2D.drawString("Player 1 wins.", 700/2, 600/2);
+                
                 
             }
             else if(o instanceof Friendly){
