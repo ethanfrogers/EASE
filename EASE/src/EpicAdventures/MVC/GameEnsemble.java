@@ -245,10 +245,7 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     
     public void init(){
         this.model.clear();
-        
-        for(int i = 0; i < objectLimit ; i++){
-            addElements();
-        }
+        addElements();
     }
 
     public void addElements() {
