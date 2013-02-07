@@ -19,6 +19,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.Timer;
+import Factories.GameObjectsFactory;
 /**
  *
  * @author efrogers_it
@@ -251,26 +252,22 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     }
 
     public void addElements() {
-        
-        
         if(model.size() == objectLimit) return;
-        if(objectsOnModel == 0){
-            Enemy e = new Enemy();
-            e.setPosition(enemyPosition);
-            e.setHealth(100);
+        for(int i = 0; i < 2 ; i++){
+            AbstractGameObject e = null; String id = ""; Vector pos = null;
+            if(i == 0){
+                id = "enemy";
+                pos = enemyPosition;
+            }
+            else if(i == 1){
+                id = "friendly";
+                pos = friendlyPosition;
+            }
+            e = GameObjectsFactory.createGameObject(id, pos);
             setChanged();
-            notifyObservers(new HealthPacket(e.getHealth(),"enemy"));
+            notifyObservers(new HealthPacket(e.getHealth(),id));
             model.add(e);
-            objectsOnModel++;
-        }
-        else if(objectsOnModel == 1){
-            Friendly f = new Friendly();
-            f.setPosition(friendlyPosition);
-            f.setHealth(100);
-            setChanged();
-            notifyObservers(new HealthPacket(f.getHealth(),"friendly"));
-            model.add(f);
-            objectsOnModel++;
+            
         }
     }
 
