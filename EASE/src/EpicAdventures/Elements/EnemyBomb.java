@@ -17,8 +17,8 @@ public class EnemyBomb extends AbstractGameObject {
     
     public EnemyBomb(){
         
-        File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/enemyBomb.png");
-        
+        //File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/enemyBomb.png");
+        File f = new File(Friendly.class.getResource("enemyBomb.png").getPath());
        
        
        try{

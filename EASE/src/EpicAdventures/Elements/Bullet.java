@@ -15,8 +15,8 @@ import javax.imageio.ImageIO;
 public class Bullet extends AbstractGameObject {
     
     public Bullet(){
-        File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/bullet.png");
-       
+        //File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/bullet.png");
+       File f = new File(Friendly.class.getResource("bullet.png").getPath());
        //System.out.println(f.getPath());
        try{
             this.setImg(ImageIO.read(f));

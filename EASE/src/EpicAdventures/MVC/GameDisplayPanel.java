@@ -58,7 +58,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
         //g.setColor(Color.LIGHT_GRAY);
         Image b = null;
         try{
-             b =  ImageIO.read(new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/MVC/8bitbg.png"));
+             b =  ImageIO.read(new File(GameDisplayPanel.class.getResource("8bitbg.png").getPath()));
         }
         catch(IOException e){
             System.err.println("Cannot read input file");
@@ -79,7 +79,7 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
                     i = e.getImg();
                     g2D.drawImage(i, (int)e.getX(), (int)e.getY(), this);
                 }
-                else
+                else 
                     g2D.drawString("Player 1 wins.", 700/2, 600/2);
                 
             }
