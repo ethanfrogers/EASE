@@ -16,9 +16,7 @@ import javax.imageio.ImageIO;
 public class Enemy extends AbstractGameObject{
     
     public Enemy(){
-       //File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/alien.png");
        File f = new File(Friendly.class.getResource("alien.png").getPath());
-       //System.out.println(f.getPath());
        try{
             this.setImg(ImageIO.read(f));
        }
