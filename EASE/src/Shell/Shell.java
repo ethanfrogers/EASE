@@ -45,23 +45,21 @@ public class Shell {
 
 class GameFactory{
     
-    static AbstractEnsemble e;
-    static AbstractDisplayPanel d;
-    static AbstractControlPanel c;
+    
     
     public static JFrame createGame(int i){
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        JPanel panel = new JPanel();
         if(i == 1){
             frame.setTitle("KineticModel");
-            JPanel panel = new JPanel();
+            panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            e = new Ensemble();
-            d = new DisplayPanel((Ensemble)e);
+            Ensemble e = new Ensemble();
+            DisplayPanel d = new DisplayPanel(e);
             panel.add(d,BorderLayout.WEST);
-            c = new ControlPanel((DisplayPanel)d,(Ensemble)e);
+            ControlPanel c = new ControlPanel(d,e);
             panel.add(c,BorderLayout.EAST);
             if (frame != null) {
                 frame.getRootPane().setDefaultButton(
@@ -71,19 +69,19 @@ class GameFactory{
         }
         else if(i == 2){
             frame.setTitle("Epic Adventures");
-            JPanel panel = new JPanel();
+            panel = new JPanel();
             panel.setLayout(new BorderLayout());
-            e = new GameEnsemble();
-            d = new GameDisplayPanel((GameEnsemble)e);
+            GameEnsemble e = new GameEnsemble();
+            GameDisplayPanel d = new GameDisplayPanel(e);
             panel.add(d,BorderLayout.NORTH);
-            c = new GameControlPanel((GameDisplayPanel)d,(GameEnsemble)e);
+            GameControlPanel c = new GameControlPanel((GameDisplayPanel)d,(GameEnsemble)e);
             panel.add(c,BorderLayout.SOUTH);
             if (frame != null) {
                 frame.getRootPane().setDefaultButton(
                 c.getDefaultButton());
              }
         }
-        
+        frame.add(panel);
         frame.pack();
         frame.setVisible(true);
         return frame;

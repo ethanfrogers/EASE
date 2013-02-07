@@ -6,8 +6,9 @@ package EpicAdventures.Elements;
 
 import MVCFramework.Vector;
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -21,6 +22,9 @@ public abstract class AbstractGameObject extends Object {
     protected Color color = new Color(0,true);
     protected Vector position = new Vector();
     protected BufferedImage img = null;
+    String fileName = "";
+    
+   
 
     public double getHeight() {
         return height;

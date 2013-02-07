@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 package EpicAdventures.MVC;
+import EpicAdventures.Elements.AbstractGameObject;
 import EpicAdventures.Elements.Bullet;
 import EpicAdventures.Elements.Enemy;
+import EpicAdventures.Elements.EnemyBomb;
 import EpicAdventures.Elements.Friendly;
 import EpicAdventures.Elements.HealthPacket;
 import MVCFramework.AbstractEnsemble;
@@ -15,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.Timer;
 /**
  *
@@ -33,6 +36,10 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     Timer timer = new Timer(1000/50,this);
     String state = "changed";
     Boolean reverseEnemy = true;
+    Boolean enemyPresent = true;
+    Random rand = new Random();
+    int bombDrop = 0;
+    
     
     
     public GameEnsemble(){
@@ -41,6 +48,9 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
        
     }
     
+    private int getRandom(){
+       return 10 + (int)(Math.random() * ((50 - 10) + 1));
+    }
     
     @Override
     public void iterate() {
@@ -75,7 +85,16 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         Object source = ae.getSource();
         
         if(source == timer){
-            
+            if(bombDrop <= 500){
+                bombDrop += getRandom();
+            }
+            else{
+                if(enemyPresent){
+                    bulletFired("enemy");
+                    bombDrop = 0;
+                }
+                
+            }
             for(Object o: this.model){
                 if(o instanceof Bullet){
                     Bullet b = (Bullet)o;
@@ -86,7 +105,11 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                     else{
                         if(checkBulletCollision(b,enemyPosition)){
                             System.out.println("Enemy Hit");
-                            healthChange = 5;
+                            healthChange = 5;                         
+                            int num = updateHealth(healthChange,new Enemy());
+                            setChanged();
+                            notifyObservers(new HealthPacket(num, "enemy"));
+                            healthChange = 0;
                         }
                         
                         b.setPosition(b.getX(),b.getY()-20);
@@ -94,8 +117,35 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                     }
                     
                 }
+                else if(o instanceof EnemyBomb){
+                    EnemyBomb b = (EnemyBomb)o;
+                    if(b.getY() >= 600){
+                        model.remove(b);
+                        break;
+                    }
+                    else{
+                        if(checkBulletCollision(b,friendlyPosition)){
+                            System.out.println("Friend Hit");
+                            healthChange = 5;                          
+                            int num = updateHealth(healthChange,new Friendly());
+                            setChanged();
+                            notifyObservers(new HealthPacket(num, "friendly"));
+                            healthChange = 0;
+                           
+                        }
+                        
+                        b.setPosition(b.getX(),b.getY()+20);
+                        
+                    }
+                    
+                }
                 else if(o instanceof Enemy){
                     Enemy e = (Enemy)o;
+                    if(e.getHealth() < 0){
+                        model.remove(e);
+                        enemyPresent = false;
+                        break;
+                    }
                     enemyPosition = e.getPosition();
                     if(reverseEnemy == true){
                         enemyPosition.set(enemyPosition.x+5, enemyPosition.y);
@@ -108,11 +158,8 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                     }
 
                     e.setPosition(enemyPosition);
-                    e.setHealth(e.getHealth()-healthChange);
-                    setChanged();
-                    notifyObservers(new HealthPacket(e.getHealth(),"enemy"));
-                    healthChange = 0;
                 }
+                
             }
         }
         
@@ -121,7 +168,7 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         
     }
     
-    private Boolean checkBulletCollision(Bullet b, Vector e){
+    private Boolean checkBulletCollision(AbstractGameObject b, Vector e){
         Boolean strike;
         if(((b.getX() + 100) > e.x && (b.getX() - 100) < e.x) && ((b.getY() + 20) > e.y && (b.getY() - 20) < e.y)){
             return strike = true;
@@ -153,12 +200,21 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         notifyObservers(state);
     }
     
-    public void bulletFired(){
-        Bullet b = new Bullet();
-        b.setPosition(friendlyPosition.x, friendlyPosition.y);
-        this.model.add(b);
-        setChanged();
-        notifyObservers(state);
+    public void bulletFired(String ID){
+        if("friendly".equals(ID)){
+            Bullet b = new Bullet();
+            b.setPosition(friendlyPosition.x, friendlyPosition.y);
+            this.model.add(b);
+            setChanged();
+            notifyObservers(state);
+        }
+        else if("enemy".equals(ID)){
+            EnemyBomb b = new EnemyBomb();
+            b.setPosition(enemyPosition.x, enemyPosition.y);
+            this.model.add(b);
+            setChanged();
+            notifyObservers(state);
+        }
     }
 
     @Override
@@ -220,6 +276,41 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
 
     public ArrayList<Object> getModel() {
         return model;
+    }
+
+    private int updateFriendlyHealth(int healthChange) {
+        int curHealth = 0;
+        for(Object o: this.model){
+            if(o instanceof Friendly){
+                Friendly f = (Friendly)o;
+                f.setHealth(f.getHealth() - healthChange);
+                curHealth = f.getHealth();
+            }
+        }
+        return curHealth;
+    }
+
+    private int updateEnemyHealth(int healthChange) {
+        int curHealth = 0;
+        for(Object o: this.model){
+            if(o instanceof Enemy){
+                Enemy f = (Enemy)o;
+                f.setHealth(f.getHealth() - healthChange);
+                curHealth = f.getHealth();
+            }
+        }
+        return curHealth;
+    }
+    private int updateHealth(int healthChange,AbstractGameObject o){
+        int curHealth = 0;
+        for(Object o1 : this.model){
+            if(o1.getClass() == o.getClass()){
+                AbstractGameObject test = (AbstractGameObject) o1;
+                test.setHealth(test.getHealth() - healthChange);
+                curHealth = test.getHealth();
+            }
+        }
+        return curHealth;
     }
 
     

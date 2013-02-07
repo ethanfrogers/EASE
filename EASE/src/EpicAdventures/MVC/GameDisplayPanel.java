@@ -6,6 +6,7 @@ package EpicAdventures.MVC;
 
 import EpicAdventures.Elements.Bullet;
 import EpicAdventures.Elements.Enemy;
+import EpicAdventures.Elements.EnemyBomb;
 import EpicAdventures.Elements.Friendly;
 import MVCFramework.AbstractDisplayPanel;
 import java.awt.*;
@@ -84,11 +85,20 @@ public class GameDisplayPanel extends AbstractDisplayPanel implements Observer {
             }
             else if(o instanceof Friendly){
                 Friendly f = (Friendly)o;
-                i = f.getImg();
-                g2D.drawImage(i, (int)f.getX(), (int)f.getY(), this);
+                if(!(f.getHealth() <= 0)){
+                    i = f.getImg();
+                    g2D.drawImage(i, (int)f.getX(), (int)f.getY(), this);
+                }
+                else
+                    g2D.drawString("Aleins wins.", 700/2, 600/2);
             }
             else if(o instanceof Bullet){
                 Bullet bul = (Bullet)o;
+                i = bul.getImg();
+                g2D.drawImage(i, (int)bul.getX(), (int)bul.getY(), this);
+            }
+            else if(o instanceof EnemyBomb){
+                EnemyBomb bul = (EnemyBomb)o;
                 i = bul.getImg();
                 g2D.drawImage(i, (int)bul.getX(), (int)bul.getY(), this);
             }
