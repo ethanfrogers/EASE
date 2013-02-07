@@ -271,6 +271,10 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     public ArrayList<Object> getModel() {
         return model;
     }
+    
+    public Boolean getEnemyState(){
+        return enemyPresent;
+    }
 
     private int updateHealth(int healthChange,AbstractGameObject o){
         int curHealth = 0;
