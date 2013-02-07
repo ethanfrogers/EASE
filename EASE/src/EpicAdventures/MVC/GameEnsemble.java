@@ -202,20 +202,20 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     }
     
     public void bulletFired(String ID){
+        String type =""; AbstractGameObject e = null; Vector pos = null;
         if("friendly".equals(ID)){
-            Bullet b = new Bullet();
-            b.setPosition(friendlyPosition.x, friendlyPosition.y);
-            this.model.add(b);
-            setChanged();
-            notifyObservers(state);
+            type = "bullet";
+            pos = friendlyPosition;
         }
         else if("enemy".equals(ID)){
-            EnemyBomb b = new EnemyBomb();
-            b.setPosition(enemyPosition.x, enemyPosition.y);
-            this.model.add(b);
-            setChanged();
-            notifyObservers(state);
+            type = "enemyBomb";
+            pos = enemyPosition;
         }
+        e = GameObjectsFactory.createGameObject(type, pos);
+        model.add(e);
+        setChanged();
+        notifyObservers(state);
+        
     }
 
     @Override
