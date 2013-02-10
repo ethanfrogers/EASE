@@ -9,6 +9,7 @@ import EpicAdventures.Elements.Enemy;
 import EpicAdventures.Elements.EnemyBomb;
 import EpicAdventures.Elements.Friendly;
 import EpicAdventures.Elements.HealthPacket;
+import EpicAdventures.Elements.StrikeObject;
 import MVCFramework.AbstractEnsemble;
 import MVCFramework.Vector;
 import java.awt.Color;
@@ -55,30 +56,8 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     
     @Override
     public void iterate() {
-        System.out.println("Model iterate called.");
-        for(Object o1 : this.model){
-            Enemy e;
-            Friendly f;
-            Bullet b;
-            if(o1 instanceof Enemy){
-                e = (Enemy)o1;
-                enemyPosition = e.getPosition();
-                enemyPosition.set(enemyPosition.x+100, enemyPosition.y);
-                e.setPosition(enemyPosition);
-            }
-            else if(o1 instanceof Friendly){
-                f = (Friendly)o1;
-                friendlyPosition = f.getPosition();
-                friendlyPosition.set(friendlyPosition.x-100, friendlyPosition.y);
-                f.setPosition(friendlyPosition);
-            }
-            else if(o1 instanceof Bullet){
-                b =(Bullet)o1;
-                b.setPosition(b.getX(), b.getY()-10);
-            }
-        }
-        setChanged();
-        notifyObservers(state);
+        ActionEvent e = new ActionEvent(timer, 1, "balls");
+        actionPerformed(e);
     }
     
     @Override
@@ -97,48 +76,14 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                 
             }
             for(Object o: this.model){
-                if(o instanceof Bullet){
-                    Bullet b = (Bullet)o;
-                    if(b.getY()<=0){
-                        model.remove(b);
+                if(o instanceof StrikeObject){
+                    StrikeObject b = (StrikeObject)o;
+                    if((b.getY() <= 0 && b instanceof Bullet) || (b.getY() >= 600 && b instanceof EnemyBomb)){
+                        model.remove(o);
                         break;
                     }
-                    else{
-                        if(checkBulletCollision(b,enemyPosition)){
-                            System.out.println("Enemy Hit");
-                            healthChange = 5;                         
-                            int num = updateHealth(healthChange,new Enemy());
-                            setChanged();
-                            notifyObservers(new HealthPacket(num, "enemy"));
-                            healthChange = 0;
-                        }
-                        
-                        b.setPosition(b.getX(),b.getY()-20);
-                        
-                    }
-                    
-                }
-                else if(o instanceof EnemyBomb){
-                    EnemyBomb b = (EnemyBomb)o;
-                    if(b.getY() >= 600){
-                        model.remove(b);
-                        break;
-                    }
-                    else{
-                        if(checkBulletCollision(b,friendlyPosition)){
-                            System.out.println("Friend Hit");
-                            healthChange = 5;                          
-                            int num = updateHealth(healthChange,new Friendly());
-                            setChanged();
-                            notifyObservers(new HealthPacket(num, "friendly"));
-                            healthChange = 0;
-                           
-                        }
-                        
-                        b.setPosition(b.getX(),b.getY()+20);
-                        
-                    }
-                    
+                    else
+                        strikeCheck((StrikeObject)o);
                 }
                 else if(o instanceof Enemy){
                     Enemy e = (Enemy)o;
@@ -148,16 +93,7 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                         break;
                     }
                     enemyPosition = e.getPosition();
-                    if(reverseEnemy == true){
-                        enemyPosition.set(enemyPosition.x+5, enemyPosition.y);
-                        if(enemyPosition.x >=700) reverseEnemy = false;
-                        
-                    }
-                    else if(reverseEnemy == false){
-                        enemyPosition.set(enemyPosition.x-5, enemyPosition.y);
-                        if(enemyPosition.x <=0) reverseEnemy = true;
-                    }
-
+                    moveObject(null,"enemy");
                     e.setPosition(enemyPosition);
                 }
                 
@@ -182,10 +118,10 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         
     }
     
-    public void moveFriendly(Object o1){
+    public void moveObject(Object o1, String id){
         for(Object o : this.model){
             Friendly f;
-            if (o instanceof Friendly){
+            if (o instanceof Friendly && "friendly".equals(id)){
                 f = (Friendly) o;
                 if("left".equals(o1) && friendlyPosition.x > 0){
                     friendlyPosition.set(friendlyPosition.x - 50, friendlyPosition.y);
@@ -195,11 +131,58 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
                     friendlyPosition.set(friendlyPosition.x + 50, friendlyPosition.y);
                     f.setPosition(friendlyPosition);
                 }
+                setChanged();
+                notifyObservers(state);
+            }
+            else if(o instanceof Enemy && "enemy".equals(id)){
+                if(reverseEnemy == true){
+                        enemyPosition.set(enemyPosition.x+5, enemyPosition.y);
+                        if(enemyPosition.x >=700) reverseEnemy = false;
+                        
+                    }
+                    else if(reverseEnemy == false){
+                        enemyPosition.set(enemyPosition.x-5, enemyPosition.y);
+                        if(enemyPosition.x <=0) reverseEnemy = true;
+                    }
             }
         }
-        setChanged();
-        notifyObservers(state);
+        
     }
+    
+    public void strikeCheck(StrikeObject e){
+       if(e instanceof Bullet){
+            Bullet b = (Bullet)e;
+            
+            if(checkBulletCollision(b,enemyPosition)){
+                System.out.println("Enemy Hit");
+                healthChange = 5;                         
+                int num = updateHealth(healthChange,new Enemy());
+                setChanged();
+                notifyObservers(new HealthPacket(num, "enemy"));
+                healthChange = 0;
+            }
+
+            b.setPosition(b.getX(),b.getY()-20);
+       }
+       else if(e instanceof EnemyBomb){
+            EnemyBomb b = (EnemyBomb)e;
+   
+            if(checkBulletCollision(b,friendlyPosition)){
+                System.out.println("Friend Hit");
+                healthChange = 5;                          
+                int num = updateHealth(healthChange,new Friendly());
+                setChanged();
+                notifyObservers(new HealthPacket(num, "friendly"));
+                healthChange = 0;
+
+            }
+
+            b.setPosition(b.getX(),b.getY()+20);
+
+       }
+    
+    }
+    
     
     public void bulletFired(String ID){
         String type =""; AbstractGameObject e = null; Vector pos = null;
