@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
  *
  * @author efrogers_it
  */
-public class EnemyBomb extends AbstractGameObject {
+public class EnemyBomb extends StrikeObject {
     
     public EnemyBomb(){
         
