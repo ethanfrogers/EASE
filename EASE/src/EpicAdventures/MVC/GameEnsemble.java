@@ -30,7 +30,7 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     private int iterations = 0;
     private int objectLimit = 2;
     private int objectsOnModel = 0;
-    int healthChange = 0;
+    //int healthChange = 0;
     private Vector enemyPosition = new Vector(top, left);
     private Vector friendlyPosition = new Vector(bottom+35,right+35);
     private Rectangle2D enemyShape = new Rectangle2D.Double();
@@ -43,38 +43,41 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     int bombDrop = 0;
     
     
-    
+    /**
+     * Constuctor for the GameEnsemble. Uses the super implementation of the AbstractEnesmble class
+     */
     public GameEnsemble(){
         super();
         timer.start();
        
     }
     
+    /*
+     * Method to generate random numbers for enemy bombs
+     */
     private int getRandom(){
        return 10 + (int)(Math.random() * ((50 - 10) + 1));
     }
     
+    /*
+     * overridden method of the AbstractEnsemble's iterate method. Used to iterate the ensemble
+     */
     @Override
     public void iterate() {
         ActionEvent e = new ActionEvent(timer, 1, "balls");
         actionPerformed(e);
     }
     
+    /*
+     * actionPerformed method to iterate the ensemble based on the timer firing. Used to move Strike
+     * objects up/down the screen, and enemy movement
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         Object source = ae.getSource();
         
         if(source == timer){
-            if(bombDrop <= 500){
-                bombDrop += getRandom();
-            }
-            else{
-                if(enemyPresent){
-                    bulletFired("enemy");
-                    bombDrop = 0;
-                }
-                
-            }
+            bombTime();
             for(Object o: this.model){
                 if(o instanceof StrikeObject){
                     StrikeObject b = (StrikeObject)o;
@@ -105,6 +108,28 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         
     }
     
+    /*
+     * method to time release of bombs from enemy
+     */
+    private void bombTime(){
+        if(bombDrop <= 500){
+                bombDrop += getRandom();
+            }
+            else{
+                if(enemyPresent){
+                    bulletFired("enemy");
+                    bombDrop = 0;
+                }
+                
+            }
+    }
+    
+    /**
+     * Method to check bullet Strike Object collision on enemy or friendly
+     * @param b game object to check collision against
+     * @param e position of game object to check
+     * @return returns true if strike occurrs, false otherwise;
+     */
     private Boolean checkBulletCollision(AbstractGameObject b, Vector e){
         Boolean strike;
         if(((b.getX() + 100) > e.x && (b.getX() - 100) < e.x) && ((b.getY() + 20) > e.y && (b.getY() - 20) < e.y)){
@@ -118,6 +143,11 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         
     }
     
+    /**
+     * Method to move objects across the sceen
+     * @param o1 movement commands
+     * @param id id for object type
+     */
     public void moveObject(Object o1, String id){
         for(Object o : this.model){
             Friendly f;
@@ -149,17 +179,19 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         
     }
     
+    /**
+     * Method for updating health is strike occurrs
+     * @param e striking object. used to locate each object
+     */
     public void strikeCheck(StrikeObject e){
        if(e instanceof Bullet){
             Bullet b = (Bullet)e;
             
             if(checkBulletCollision(b,enemyPosition)){
-                System.out.println("Enemy Hit");
-                healthChange = 5;                         
-                int num = updateHealth(healthChange,new Enemy());
+                System.out.println("Enemy Hit");                  
+                int num = updateHealth(5,new Enemy());
                 setChanged();
                 notifyObservers(new HealthPacket(num, "enemy"));
-                healthChange = 0;
             }
 
             b.setPosition(b.getX(),b.getY()-20);
@@ -169,12 +201,9 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
    
             if(checkBulletCollision(b,friendlyPosition)){
                 System.out.println("Friend Hit");
-                healthChange = 5;                          
-                int num = updateHealth(healthChange,new Friendly());
+                int num = updateHealth(5,new Friendly());
                 setChanged();
                 notifyObservers(new HealthPacket(num, "friendly"));
-                healthChange = 0;
-
             }
 
             b.setPosition(b.getX(),b.getY()+20);
@@ -183,7 +212,10 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
     
     }
     
-    
+    /**
+     * Method for firing bullets. 
+     * @param ID object type
+     */
     public void bulletFired(String ID){
         String type =""; AbstractGameObject e = null; Vector pos = null;
         if("friendly".equals(ID)){
@@ -200,37 +232,28 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         notifyObservers(state);
         
     }
-
+    
+    /**
+     * method for getting shape of an object. not called in this implementation
+     * @param o1 requested object
+     * @return 
+     */
     @Override
     public Shape getShape(Object o1) {
-        Shape s = null;
-        if(o1 instanceof Enemy){
-           enemyShape.setFrame(enemyPosition.x, enemyPosition.y, 100, 100);
-           s = enemyShape;
-        }
-        else if (o1 instanceof Friendly){
-           friendlyShape.setFrame(friendlyPosition.x, friendlyPosition.y, 50, 50);
-           s = friendlyShape;
-        }
-        return s;
+        return null;
     }
     
-    public Color getElementColor(Object o1){
-        Color c = null;
-        if(o1 instanceof Enemy){
-           c = Color.BLUE;
-        }
-        else if (o1 instanceof Friendly){
-           c = Color.RED;
-        }
-        return c;
-    }
-    
+    /**
+     * init the model. 
+     */
     public void init(){
         this.model.clear();
         addElements();
     }
 
+    /**
+     * called by init() adds elements to the model upon startup
+     */
     public void addElements() {
         if(model.size() == objectLimit) return;
         for(int i = 0; i < 2 ; i++){
@@ -251,20 +274,34 @@ public class GameEnsemble extends AbstractEnsemble implements ActionListener {
         }
     }
 
+    /**
+     * accessor method for the model
+     * @return model
+     */
     public ArrayList<Object> getModel() {
         return model;
     }
     
+    /**
+     * check enemy state
+     * @return true if enemy is present on model. false otherwise
+     */
     public Boolean getEnemyState(){
         return enemyPresent;
     }
 
-    private int updateHealth(int healthChange,AbstractGameObject o){
+    /**
+     * method for updating health of an object
+     * @param  amount of health to deduct
+     * @param o object to deduct
+     * @return 
+     */
+    private int updateHealth(int amount,AbstractGameObject o){
         int curHealth = 0;
         for(Object o1 : this.model){
             if(o1.getClass() == o.getClass()){
                 AbstractGameObject test = (AbstractGameObject) o1;
-                test.setHealth(test.getHealth() - healthChange);
+                test.setHealth(test.getHealth() - amount);
                 curHealth = test.getHealth();
             }
         }
