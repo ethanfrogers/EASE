@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
  *
  * @author efrogers_it
  */
-public class Bullet extends AbstractGameObject {
+public class Bullet extends StrikeObject {
     
     public Bullet(){
         //File f = new File("C:/Users/efrogers_it/Dropbox/CS/4322/PROJ3/EASE/src/EpicAdventures/Elements/bullet.png");
