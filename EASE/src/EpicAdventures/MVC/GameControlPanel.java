@@ -79,7 +79,7 @@ public class GameControlPanel extends AbstractControlPanel implements ActionList
             model.iterate();
         }
         else if("left".equals(cmd) || "right".equals(cmd)){
-            model.moveFriendly(cmd);
+            model.moveObject(cmd,"friendly");
         }
         else if("space".equals(cmd)){
             model.bulletFired("friendly");
