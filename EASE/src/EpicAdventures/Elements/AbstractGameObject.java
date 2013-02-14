@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import Factories.ImagesFactory;
 
 /**
  *
@@ -92,6 +93,10 @@ public abstract class AbstractGameObject extends Object {
 
     public void setImg(BufferedImage img) {
         this.img = img;
+    }
+    
+    public void setImg(AbstractGameObject o){
+        this.img = ImagesFactory.createImage(o);
     }
    
     
